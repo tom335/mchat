@@ -1,0 +1,48 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Lora&family=Heebo:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <script type="module" src="/js/main.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body x-data="app">
+    <header><h1>mchat<span>.</span></h1></header>
+    <main>
+        <div class="flex full-height">
+            <div class="channels">
+                <h4>Channels</h4>
+                <div x-data>
+                    <template x-for="channel in $store.channels.items" :key="channel.name">
+                        <p x-text="channel.name"
+                           @click="setChannel(channel.name)"
+                           :class="{ 'current': channel.name === 'general'}" ></p>
+                    </template>
+                </div>
+            </div>
+            <div class="messages-outer flex flex-col full-height">
+                <div class="messages">
+                    <div>
+                        <p>A message</p>
+                    </div>
+                    <div>
+                        <p class="me">Ok, I'm answering you with this other message</p>
+                    </div>
+                </div>
+                <div class="message-input">
+                    <input type="text" name="message"
+                           class="message" placeholder="Type your message" />
+                    <button @click="sendMessage">Send</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer x-data="{ message: 'Made with ❤️ and Alpine.js' }" x-text="message"></footer>
+</body>
+</html>
