@@ -2,8 +2,9 @@
 <head>
     <meta charset="utf-8" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Lora&family=Heebo:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/reset.css" />
     <link rel="stylesheet" href="/css/style.css" />
@@ -20,19 +21,24 @@
                 <div x-data>
                     <template x-for="channel in $store.channels.items" :key="channel.name">
                         <p x-text="channel.name"
-                           @click="setChannel(channel.name)"
-                           :class="{ 'current': channel.name === 'general'}" ></p>
+                           @click="$store.channels.setChannel(channel.name)"
+                           :class="{ 'current': channel.name === $store.channels.current}" ></p>
                     </template>
                 </div>
             </div>
             <div class="messages-outer flex flex-col full-height">
                 <div class="messages">
-                    <div>
-                        <p>A message</p>
-                    </div>
-                    <div>
-                        <p class="me">Ok, I'm answering you with this other message</p>
-                    </div>
+                    <template x-for="message in $store.messages.items[$store.channels.current]">
+                        <div class="flex">
+                            <div class="timestamp">
+                                <p x-text="message.from"></p>
+                                <p x-text="formatDate(message.timestamp)"></p>
+                            </div>
+                            <div>
+                                <p class="text" x-text="message.text"></p>
+                            </div>
+                        </div>
+                    </template>
                 </div>
                 <div class="message-input">
                     <input type="text" name="message"

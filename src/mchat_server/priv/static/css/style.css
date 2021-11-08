@@ -95,10 +95,25 @@ h4 {
     margin-bottom: 1em;
 }
 
-.messages p {
+.messages p.text {
     display: inline-block;
     padding: 1em;
     background: #fff4a9;
+}
+
+.messages .timestamp {
+    padding-right: 1em;
+}
+
+.messages .timestamp p:first-child {
+    font-size: 1em;
+    font-weight: bold;
+    color: #444;
+}
+
+.messages .timestamp p {
+    font-size: .9em;
+    color: #777;
 }
 
 .messages p.me {

@@ -13,11 +13,7 @@ ws.setup({
 
     onMessage: (ev, json) => {
         if (json.message) {
-            const p = document.createElement('p')
-            console.log(json)
-            p.innerText = json.message
-
-            document.querySelector('.messages').append(p)
+            Alpine.store('messages').addMessage(json.message)
         }
     }
 })
@@ -25,7 +21,11 @@ ws.setup({
 
 document.addEventListener('alpine:init', () => {
 
+    ws.join('general')
+
     Alpine.store('channels', {
+        current: 'general',
+
         items: [
             {
                 name: 'general',
@@ -33,7 +33,41 @@ document.addEventListener('alpine:init', () => {
             {
                 name: 'programming',
             }
-        ]
+        ],
+
+        setChannel(name) {
+            console.log(`set channel to ${name}`)
+            this.current = name
+            ws.join(name)
+        },
+    })
+
+    Alpine.store('messages', {
+
+        items: {
+            'general': [
+                {
+                    'from': 'admin',
+                    'to':   'general',
+                    'text': 'Welcome to #general',
+                    'timestamp': Date.now()
+                }
+            ],
+            'programming' : [
+                {
+                    'from': 'admin',
+                    'to':   'general',
+                    'text': 'Welcome to #programming',
+                    'timestamp': Date.now()
+                }
+            ]
+        },
+
+        addMessage(message) {
+            const m = JSON.parse(message)
+            console.log(this.items[m.to])
+            this.items[m.to].push(m)
+        }
     })
 
     Alpine.data('app', () => ({
@@ -42,17 +76,22 @@ document.addEventListener('alpine:init', () => {
             return this.channel
         },
 
-        setChannel(name) {
-            console.log(`set channel to ${name}`)
-            // this.channel = name
-        },
-
         sendMessage() {
             const input = document.querySelector('.message')
-            const message = input.value
+            const message = {
+                from: 'user',
+                to: Alpine.store('channels').current,
+                text: input.value,
+                timestamp: Date.now()
+            }
 
             console.log("Sending... to room:general")
-            ws.message(message, roomGeneral)
+            ws.message(JSON.stringify(message), message.to)
+        },
+
+        formatDate(timestamp) {
+            const d = new Date(timestamp)
+            return d.toLocaleTimeString()
         }
     }))
 })
