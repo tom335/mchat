@@ -101,6 +101,11 @@ h4 {
     background: #fff4a9;
 }
 
+.messages p.text.me {
+    background: #c9ebff;
+}
+
+
 .messages .timestamp {
     padding-right: 1em;
 }
@@ -115,11 +120,6 @@ h4 {
     font-size: .9em;
     color: #777;
 }
-
-.messages p.me {
-    background: #c9ebff;
-}
-
 
 .message-input {
     display: flex;

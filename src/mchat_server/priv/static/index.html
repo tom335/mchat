@@ -35,13 +35,14 @@
                                 <p x-text="formatDate(message.timestamp)"></p>
                             </div>
                             <div>
-                                <p class="text" x-text="message.text"></p>
+                                <p :class="{ 'me': message.from == currentUser()}"
+                                    class="text" x-text="message.text"></p>
                             </div>
                         </div>
                     </template>
                 </div>
                 <div class="message-input">
-                    <input type="text" name="message"
+                    <input @keyup.enter="sendMessage" type="text" name="message"
                            class="message" placeholder="Type your message" />
                     <button @click="sendMessage">Send</button>
                 </div>

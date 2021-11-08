@@ -1,14 +1,14 @@
 import WebSocketClient from './wsclient.js'
 
 const ws = new WebSocketClient()
-const roomGeneral = 'room:general'
 
 
 ws.setup({
 
     onOpen: ev => {
-        console.log('joining room:general')
-        ws.join(roomGeneral)
+        console.log('Socket open: joining default rooms')
+        ws.join('general')
+        ws.join('programming')
     },
 
     onMessage: (ev, json) => {
@@ -18,10 +18,19 @@ ws.setup({
     }
 })
 
+function randInt(min = 0, max = 1000) {
+    return Math.floor(Math.random() * max) + min
+}
+
+
+function genUserName() {
+    return 'user_' + randInt()
+}
+
+const userName = genUserName()
+
 
 document.addEventListener('alpine:init', () => {
-
-    ws.join('general')
 
     Alpine.store('channels', {
         current: 'general',
@@ -36,9 +45,8 @@ document.addEventListener('alpine:init', () => {
         ],
 
         setChannel(name) {
-            console.log(`set channel to ${name}`)
+            console.log(`Channel set to ${name}`)
             this.current = name
-            ws.join(name)
         },
     })
 
@@ -76,16 +84,20 @@ document.addEventListener('alpine:init', () => {
             return this.channel
         },
 
+        currentUser() {
+            return userName
+        },
+
         sendMessage() {
             const input = document.querySelector('.message')
             const message = {
-                from: 'user',
+                from: this.currentUser(),
                 to: Alpine.store('channels').current,
                 text: input.value,
                 timestamp: Date.now()
             }
+            input.value = ''
 
-            console.log("Sending... to room:general")
             ws.message(JSON.stringify(message), message.to)
         },
 
