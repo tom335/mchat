@@ -20,4 +20,4 @@ Then start the app with `iex -S mix` or `mix run`.
 
 ### Snapshot
 
-![image](https://user-images.githubusercontent.com/90054242/140659430-751347a2-b8c5-45ce-9770-eb9644ae8541.png)
+![image](https://user-images.githubusercontent.com/90054242/140743503-93b1cfb7-d90e-4545-9d4f-f169d4243bdc.png)
