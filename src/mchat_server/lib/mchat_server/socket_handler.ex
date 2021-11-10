@@ -1,22 +1,18 @@
 defmodule MchatServer.SocketHandler do
-
   defmacro __using__(_opts) do
     quote do
       @behaviour :cowboy_websocket
       require Logger
 
-      @callback handle_message(String.t) :: {:ok, term}
-
+      @callback handle_message(String.t()) :: {:ok, term}
 
       def init(request, state) do
         {:cowboy_websocket, request, state}
       end
 
-
       def websocket_init(state) do
         {:ok, state}
       end
-
 
       @doc """
       Handle incoming websocket messages.
@@ -31,25 +27,24 @@ defmodule MchatServer.SocketHandler do
 
       """
       def websocket_handle({:text, json}, state) do
-        Logger.info json
-        Logger.info "websocket_handle :: calling handle_message callback"
+        Logger.info(json)
+        Logger.info("websocket_handle :: calling handle_message callback")
         handle_message(json)
 
         {:reply, {:text, json}, state}
       end
 
       def websocket_handle(_frame, state) do
-        Logger.info "websocket_handle :: ping"
+        Logger.info("websocket_handle :: ping")
         {:ok, state}
       end
 
       def websocket_info(info, state) do
-        Logger.info "websocket_info :: message :: " <> info
+        Logger.info("websocket_info :: message :: " <> info)
         m = Jason.encode!(%{message: info})
 
         {:reply, {:text, m}, state}
       end
-
     end
   end
 end

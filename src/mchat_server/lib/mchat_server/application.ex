@@ -31,11 +31,10 @@ defmodule MchatServer.Application do
   defp dispatch do
     [
       {:_,
-        [
-          {"/ws/[...]", MchatServer.PubSubHandler, []},
-          {:_, Plug.Cowboy.Handler, {MchatServer.Router, []}}
-        ]
-      }
+       [
+         {"/ws/[...]", MchatServer.PubSubHandler, []},
+         {:_, Plug.Cowboy.Handler, {MchatServer.Router, []}}
+       ]}
     ]
   end
 end
