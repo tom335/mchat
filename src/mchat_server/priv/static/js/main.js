@@ -1,9 +1,9 @@
 import WebSocketClient from './wsclient.js'
 
-const ws = new WebSocketClient()
+const ws_addr = 'ws://localhost:4000/ws'
+const ws = new WebSocketClient({
 
-
-ws.setup({
+    addr: ws_addr,
 
     onOpen: ev => {
         console.log('Socket open: joining default rooms')

@@ -3,11 +3,13 @@ defmodule MchatServer.PubSub do
 
   def subscribe(topic) do
     Registry.MchatServer |> Registry.register(topic, {})
+    {:ok, topic}
   end
 
 
   def unsubscribe(topic) do
-     Registry.MchatServer |> Registry.unregister(topic)
+    Registry.MchatServer |> Registry.unregister(topic)
+    {:ok, topic}
   end
 
 
@@ -20,6 +22,7 @@ defmodule MchatServer.PubSub do
         end
       end
     end)
+    {:ok, topic}
   end
 
 end

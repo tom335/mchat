@@ -32,7 +32,7 @@ defmodule MchatServer.Application do
     [
       {:_,
         [
-          {"/ws/[...]", MchatServer.SocketHandler, []},
+          {"/ws/[...]", MchatServer.PubSubHandler, []},
           {:_, Plug.Cowboy.Handler, {MchatServer.Router, []}}
         ]
       }

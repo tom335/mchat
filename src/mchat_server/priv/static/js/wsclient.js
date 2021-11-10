@@ -3,25 +3,36 @@ const serialize = str => JSON.stringify(str)
 
 export default class WebSocketClient {
 
-    setup(opts) {
-        this.socket = new WebSocket("ws://localhost:4000/ws")
+    constructor(opts) {
+        this.opts = opts
+        this.init()
+    }
+
+    init(callback = null) {
+        this.socket = new WebSocket(this.opts.addr)
 
         this.listen('open', ev => {
-            opts.onOpen(ev)
+            this.opts.onOpen(ev)
+            if (callback) callback()
         })
 
         this.listen('message', (event) => {
-            opts.onMessage(event, JSON.parse(event.data))
+            this.opts.onMessage(event, JSON.parse(event.data))
         })
 
         this.listen('close', () => {
             // restart connection on close
-            this.setup(opts)
+            // this.setup(opts)
         })
+        
     }
 
     listen(evt, fn) {
         this.socket.addEventListener(evt, fn)
+    }
+
+    ping() {
+        this.socket.send('PING')
     }
 
     join(channel) {
@@ -29,9 +40,17 @@ export default class WebSocketClient {
     }
 
     message(message, channel) {
-        this.socket.send(
-            serialize({ action: 'message',
-                        channel: channel, message: message })
-        )
+        const send = () => {
+            this.socket.send(
+                serialize({ action: 'message',
+                            channel: channel, message: message })
+            )
+        }
+
+        if (this.socket.readyState === WebSocket.CLOSED)
+            this.init(send)
+        else
+            send()
+
     }
 }
